@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.41.0] - 2026-05-24
+
+### Fixed
+
+- **Windows POSIX exec-bit tests now skip on NTFS** (PR #167 by @gauravvojha, Issue #166): `test_script_permissions.py` relied on POSIX executable bits which NTFS does not preserve. The two tests in the `CanonicalScriptPermissionsTests` class (`test_shell_scripts_are_executable`, `test_session_catchup_is_executable`) ran fine on Linux and macOS but always failed on Windows with `mode: 0o100666`. v2.41.0 adds a class-level `@pytest.mark.skipif(sys.platform == "win32")` decorator so the tests skip cleanly on Windows while still running on POSIX file systems. The upstream PR patch introduced a malformed duplicate standalone function at module scope and a nested method inside it; the fix was corrected to class-level granularity during merge.
+- **Post-merge test-file repair** (follow-up to PR #167): the squash-merged patch from PR #167 left `tests/test_script_permissions.py` in a broken state at `ed43a71`. The standalone-function duplicate and nested class method were removed, imports re-sorted, and the class-level `pytest.mark.skipif` re-applied correctly. No test logic changed.
+
+### Added
+
+- **`docs/attestation-locking.md`**: new documentation page covering the `scripts/attest-plan.sh` write path, the atomic temp-rename correctness guarantee, the optional `flock` advisory lock, a platform behavior table (Linux, macOS, Windows Git Bash, WSL), and the recommended slug-mode workflow for parallel sessions. Linked from the canonical `SKILL.md` Security Boundary section for discoverability. (PR #168 by @CleanDev-Fix, Issue #165)
+
+### Changed
+
+- Version bumped to 2.41.0 across 17 parity-locked files (14 SKILL.md variants plus `plugin.json`, `marketplace.json`, `CITATION.cff`) via `scripts/bump-version.py`. `.continue`, `.gemini`, `.pi`, `.kiro` lag intentionally per AGENTS.md release scope.
+
+### Verification
+
+- Test count: 130 pass, 2 skip (Windows exec-bit tests), 0 fail. PR #167 touches only `tests/test_script_permissions.py`; PR #168 adds `docs/attestation-locking.md` plus a two-line SKILL.md link. Neither PR touches hook bodies, canonical scripts, or the attestation mechanism.
+
+### Thanks
+
+- @gauravvojha for reporting the Windows exec-bit failure in Issue #166 and supplying the first-pass fix in PR #167.
+- @CleanDev-Fix (CleanFix-Dev) for the attestation-locking documentation in PR #168, which closes Issue #165.
+
 ## [2.40.1] - 2026-05-22
 
 ### Fixed

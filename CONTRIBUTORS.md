@@ -104,6 +104,16 @@ These amazing people have contributed code, documentation, or significant improv
 
 ### Other Contributors
 
+- **[@gauravvojha](https://github.com/gauravvojha)** - [PR #167](https://github.com/OthmanAdi/planning-with-files/pull/167), [Issue #166](https://github.com/OthmanAdi/planning-with-files/issues/166)
+  - Reported that `test_script_permissions.py` always failed on Windows because NTFS does not preserve POSIX executable bits
+  - Supplied the initial `pytest.mark.skipif(sys.platform == "win32")` patch for the two exec-bit tests
+  - **Impact:** The two pre-existing Windows exec-bit failures (present since v2.34.1) now skip cleanly on Windows, keeping the test suite green across all platforms
+
+- **[@CleanDev-Fix](https://github.com/CleanDev-Fix)** (CleanFix-Dev) - [PR #168](https://github.com/OthmanAdi/planning-with-files/pull/168), [Issue #165](https://github.com/OthmanAdi/planning-with-files/issues/165)
+  - Authored `docs/attestation-locking.md`, a dedicated page documenting the `attest-plan.sh` write path, the atomic temp-rename guarantee, the optional `flock` advisory lock, platform-specific fallback behavior, and the recommended slug-mode parallel workflow
+  - Wired the new page into the canonical `SKILL.md` Security Boundary section for discoverability
+  - **Impact:** Users on macOS and Windows Git Bash who hit the "flock not found" code path now have a clear explanation of why attestation still works and why slug-mode is preferred for concurrent sessions
+
 - **[@bmyury](https://github.com/bmyury)** - [Discussion #153](https://github.com/OthmanAdi/planning-with-files/discussions/153)
   - Reported that the installed skill's description field appeared garbled in Claude Code, surfacing fragments of hook command output instead of the documented description
   - Root cause: the `'---BEGIN PLAN DATA---'` and `'---END PLAN DATA---'` plan-injection delimiters embedded in hook commands collided with the `---` YAML document separator; Claude Code's skill-discovery loader split frontmatter on the literal `---` substring and truncated the description mid-string
@@ -283,6 +293,6 @@ If you've contributed and don't see your name here, please open an issue! We wan
 
 ---
 
-**Total Contributors:** 40+ and growing!
+**Total Contributors:** 42+ and growing!
 
-*Last updated: May 22, 2026*
+*Last updated: May 24, 2026*
